@@ -18,7 +18,7 @@ public final class SignInView implements AbstractView {
         return userName;
     }
     public String getUserPassword(){ return userPassword;}
-    public final boolean isFilled(){ return userName == null && userPassword != null;}
+    public final boolean isFilled(){ return userName != null && userPassword != null;}
     public final boolean isValid(){
         if (!isFilled()) return false;
 

@@ -4,20 +4,12 @@ import lastunion.application.Models.UserModel;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 public class UserDAO {
-    public enum FieldToUpdate{
-        ID,
-        NAME,
-        EMAIL,
-        PASSWORD,
-        SCORE
-    }
 
-    JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public UserDAO(final JdbcTemplate jdbcTemplate){
         this.jdbcTemplate = jdbcTemplate;
     }
-
 
     public UserModel getUserById(final Integer id)  {
         final String sql = "SELECT * FROM users WHERE id = ?";
@@ -45,25 +37,47 @@ public class UserDAO {
         );
     }
 
-    public void modifyUser(UserModel user, UserModel changedUser) {
-        StringBuilder builder = new StringBuilder ("UPDATE users set login = ");
-        builder.append(changedUser.getUserName());
-        builder.append(" email = ");
-        builder.append(changedUser.getUserEmail());
+    private void AppendStringField(StringBuilder builder, String fieldName, String value){
+        builder.append(fieldName);
+        builder.append('=');
+        builder.append('\'');
+        builder.append(value);
+        builder.append('\'');
         builder.append(',');
-        builder.append("password = ");
-        builder.append(changedUser.getUserPasswordHash());
-        builder.append(',');
-        builder.append(" score = ");
-        builder.append(changedUser.getUserHighScore());
-        builder.append(')');
+    }
 
+    private void AppendIntegerField(StringBuilder builder, String fieldName, Integer value){
+        builder.append(fieldName);
+        builder.append('=');
+        builder.append(value);
+    }
+
+    public void modifyUser(UserModel user, UserModel changedUser) {
+        StringBuilder builder = new StringBuilder ("UPDATE users set ");// login = ");
+//        builder.append('\'');
+//        builder.append(changedUser.getUserName());
+//        builder.append('\'');
+//        builder.append(" email = ");
+//        builder.append(changedUser.getUserEmail());
+//        builder.append(',');
+//        builder.append("password = ");
+//        builder.append(changedUser.getUserPasswordHash());
+//        builder.append(',');
+//        builder.append(" score = ");
+//        builder.append(changedUser.getUserHighScore());
+//        builder.append(')');
+        AppendStringField(builder, "login", changedUser.getUserName());
+        AppendStringField(builder, "email", changedUser.getUserEmail());
+        AppendStringField(builder, "password", changedUser.getUserPasswordHash());
+        AppendIntegerField(builder, "score", changedUser.getUserHighScore());
+        builder.append(" WHERE ");
+        AppendStringField(builder, "login", user.getUserName());
+        builder.deleteCharAt(builder.length() - 1);
         executeQuery(builder.toString());
     }
 
     public void saveUser(UserModel user)  {
-        final String sql = "INSERT INTO users (login, email, password) VALUES(?, ?, ?)";
-        StringBuilder builder = new StringBuilder("INSERT INTO users (login, email, password) VALUES(");
+        final StringBuilder builder = new StringBuilder("INSERT INTO users (login, email, password) VALUES(");
         builder.append('\'');
         builder.append(user.getUserName());
         builder.append('\'');
@@ -82,8 +96,9 @@ public class UserDAO {
 
     public void deleteUserByName(final String userName){
         final StringBuilder builder = new StringBuilder("DELETE FROM users WHERE login = ");
+        builder.append('\'');
         builder.append(userName);
-        builder.append(')');
+        builder.append('\'');
 
         executeQuery(builder.toString());
     }

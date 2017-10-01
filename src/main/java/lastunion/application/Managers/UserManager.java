@@ -54,7 +54,7 @@ public class UserManager {
         try {
             UserModel savedUser = userDAO.getUserByName(userLogin);
 
-            if (checkPassword(savedUser.getUserPasswordHash(), password))
+            if (checkPassword(password, savedUser.getUserPasswordHash()))
                 return true;
         }
         catch(DataAccessException ex){
@@ -66,23 +66,19 @@ public class UserManager {
 
     public ResponseCode signInUser(@NotNull final SignInModel signInUserData) {
 
-        // Check sigInModel for empty fields
-        //if (signInUserData.isFilledData())
-        //    return ResponseCode.INCORRECT_AUTH_DATA;
-
         // Check user storaged in database
         try {
             UserModel savedUser = userDAO.getUserByName(signInUserData.getUserName());
 
             // wrong password
-            if (!checkPassword(savedUser.getUserPasswordHash(), signInUserData.getUserPassword()))
+            if (!checkPassword(signInUserData.getUserPassword(), savedUser.getUserPasswordHash()))
                 return ResponseCode.INCORRECT_PASSWORD;
         }
         // no user, storaged in database
         catch(EmptyResultDataAccessException ex) {
             return ResponseCode.INCORRECT_LOGIN;
         }
-//        // error in work with db
+        // error in work with db
         catch(DataAccessException ex){
             return ResponseCode.DATABASE_ERROR;
         }
@@ -90,11 +86,6 @@ public class UserManager {
     }
 
     public ResponseCode signUpUser(@NotNull final SignUpModel signUpUserData) {
-
-        // Check signUpModel for empty fields
-        //if (!signUpUserData.isFilledData())  {
-        //    return ResponseCode.INCORRECT_REG_DATA;
-        //}
 
         // Creating UserModel to stoarage
         UserModel newUser = new UserModel(signUpUserData);
@@ -108,7 +99,7 @@ public class UserManager {
         catch(DuplicateKeyException dupEx) {
             return ResponseCode.LOGIN_IS_BUSY;
         }
-//        // error in work with db
+        // error in work with db
         catch(DataAccessException daEx) {
             return ResponseCode.DATABASE_ERROR;
         }
@@ -159,7 +150,10 @@ public class UserManager {
     public ResponseCode getUserByName(@NotNull final String userName, UserModel user){
         // trying to get storaged user
         try {
-            user = userDAO.getUserByName(userName);
+            UserModel tempUser = userDAO.getUserByName(userName);
+            user.setUserName(tempUser.getUserName());
+            user.setUserEmail(tempUser.getUserEmail());
+            user.setUserHighScore(tempUser.getUserHighScore());
         }
         // No user found
         catch (EmptyResultDataAccessException ex) {
@@ -191,10 +185,12 @@ public class UserManager {
     public ResponseCode getUserById(@NotNull final Integer userId, UserModel user){
         // trying to get storaged user
         try {
-            user = userDAO.getUserById(userId);
+            UserModel tempUser = userDAO.getUserById(userId);
+            user.setUserName(tempUser.getUserName());
+            user.setUserEmail(tempUser.getUserEmail());
+            user.setUserHighScore(tempUser.getUserHighScore());
         }
-//        catch(Excep
-//        // No user found
+        // No user found
         catch (EmptyResultDataAccessException ex) {
             return ResponseCode.INCORRECT_SESSION;
         }

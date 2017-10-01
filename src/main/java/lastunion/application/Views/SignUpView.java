@@ -3,6 +3,9 @@ package lastunion.application.Views;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+
 public class SignUpView implements AbstractView {
     private final String userName;
     private final String userPassword;
@@ -27,8 +30,12 @@ public class SignUpView implements AbstractView {
 
     public final boolean isValid() {
         if (!isFilled()) return false;
-
+        try {
+            InternetAddress emailAddr = new InternetAddress(userEmail);
+            emailAddr.validate();
+        } catch (AddressException ex) {
+            return false;
+        }
         return true;
-        //TODO check data for valid
     }
 }

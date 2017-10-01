@@ -49,7 +49,7 @@ public class SignUpController {
             case OK: {
                 httpSession.setAttribute("userLogin", signUpView.getUserName());
                 return new ResponseEntity<>(new ResponseCode(true,
-                        messageSource.getMessage("msgs.ok", null, Locale.ENGLISH)),
+                        messageSource.getMessage("msgs.created", null, Locale.ENGLISH)),
                         HttpStatus.OK);
             }
 
@@ -68,8 +68,3 @@ public class SignUpController {
         }
     }
 }
-            /*case INCORRECT_AUTH_DATA: {
-                return new ResponseEntity<>(new ResponseCode(false,
-                        messageSource.getMessage("msgs.bad_request", null, Locale.ENGLISH)),
-                        HttpStatus.BAD_REQUEST);
-            }*/

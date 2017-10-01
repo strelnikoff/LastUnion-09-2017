@@ -104,7 +104,7 @@ public class UserController {
         // check form for valid
         if (!emailView.isValid()) {
             return new ResponseEntity<ResponseCode>(new ResponseCode<>(false,
-                    messageSource.getMessage("msgs.bad_request", null, Locale.ENGLISH)),
+                    messageSource.getMessage("msgs.email_error", null, Locale.ENGLISH)),
                     HttpStatus.BAD_REQUEST);
         }
 

@@ -14,7 +14,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.constraints.NotNull;
 import java.util.Locale;
 
-@CrossOrigin(origins = "")
+//@CrossOrigin(origins = "")
 @RestController
 public class SignInController {
     @NotNull
