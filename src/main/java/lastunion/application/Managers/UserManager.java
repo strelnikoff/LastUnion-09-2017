@@ -4,10 +4,12 @@ import lastunion.application.DAO.UserDAO;
 import lastunion.application.Models.SignInModel;
 import lastunion.application.Models.SignUpModel;
 import lastunion.application.Models.UserModel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-//import org.springframework.dao.DataAccessException;
-//import org.springframework.dao.DuplicateKeyException;
-//import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,10 +26,13 @@ public class UserManager {
         INCORRECT_LOGIN,
         INCORRECT_PASSWORD,
         INCORRECT_SESSION,
-//        INCORRECT_AUTH_DATA,
-//        INCORRECT_REG_DATA,
         DATABASE_ERROR
     };
+
+    @Autowired
+    public UserManager(final JdbcTemplate jdbcTemplate){
+        userDAO = new UserDAO(jdbcTemplate);
+    }
 
     // Work with password
     ////////////////////////////////////////////////////////////////////////
@@ -52,12 +57,9 @@ public class UserManager {
             if (checkPassword(savedUser.getUserPasswordHash(), password))
                 return true;
         }
-        catch(Exception e){
-
+        catch(DataAccessException ex){
+            return false;
         }
-//        catch(DataAccessException ex){
-//            return false;
-//        }
         return false;
     }
     //////////////////////////////////////////////////////////////////////////
@@ -76,17 +78,14 @@ public class UserManager {
             if (!checkPassword(savedUser.getUserPasswordHash(), signInUserData.getUserPassword()))
                 return ResponseCode.INCORRECT_PASSWORD;
         }
-        catch(Exception e){
-
-        }
         // no user, storaged in database
-//        catch(EmptyResultDataAccessException ex) {
-//            return ResponseCode.INCORRECT_LOGIN;
-//        }
+        catch(EmptyResultDataAccessException ex) {
+            return ResponseCode.INCORRECT_LOGIN;
+        }
 //        // error in work with db
-//        catch(DataAccessException ex){
-//            return ResponseCode.DATABASE_ERROR;
-//        }
+        catch(DataAccessException ex){
+            return ResponseCode.DATABASE_ERROR;
+        }
         return ResponseCode.OK;
     }
 
@@ -105,17 +104,14 @@ public class UserManager {
         try {
             userDAO.saveUser(newUser);
         }
-        catch(Exception e){
-
+        // user with this login exist
+        catch(DuplicateKeyException dupEx) {
+            return ResponseCode.LOGIN_IS_BUSY;
         }
-//        // user with this login exist
-//        catch(DuplicateKeyException dupEx) {
-//            return ResponseCode.LOGIN_IS_BUSY;
-//        }
 //        // error in work with db
-//        catch(DataAccessException daEx) {
-//            return ResponseCode.DATABASE_ERROR;
-//        }
+        catch(DataAccessException daEx) {
+            return ResponseCode.DATABASE_ERROR;
+        }
 
         return ResponseCode.OK;
     }
@@ -129,18 +125,14 @@ public class UserManager {
             modifiedUser.setUserEmail(newEmail);
             userDAO.modifyUser(user, modifiedUser);
         }
-        catch(Exception e){
-
+        // No user found
+        catch (EmptyResultDataAccessException ex) {
+            return ResponseCode.INCORRECT_SESSION;
         }
-//        // No user found
-//        catch (EmptyResultDataAccessException ex) {
-//            return ResponseCode.INCORRECT_SESSION;
-//
-//        }
-//        // error db
-//        catch (DataAccessException ex) {
-//            return ResponseCode.DATABASE_ERROR;
-//        }
+        // error db
+        catch (DataAccessException ex) {
+            return ResponseCode.DATABASE_ERROR;
+        }
         return ResponseCode.OK;
     }
 
@@ -153,18 +145,14 @@ public class UserManager {
             modifiedUser.setUserPasswordHash(makePasswordHash(newPassword));
             userDAO.modifyUser(user, modifiedUser);
         }
-        catch(Exception e){
-
+        // No user found
+        catch (EmptyResultDataAccessException ex) {
+            return ResponseCode.INCORRECT_SESSION;
         }
-//        // No user found
-//        catch (EmptyResultDataAccessException ex) {
-//            return ResponseCode.INCORRECT_SESSION;
-//
-//        }
-//        // error db
-//        catch (DataAccessException ex) {
-//            return ResponseCode.DATABASE_ERROR;
-//        }
+        // error db
+        catch (DataAccessException ex) {
+            return ResponseCode.DATABASE_ERROR;
+        }
         return ResponseCode.OK;
     }
 
@@ -173,18 +161,14 @@ public class UserManager {
         try {
             user = userDAO.getUserByName(userName);
         }
-        catch(Exception e){
-
+        // No user found
+        catch (EmptyResultDataAccessException ex) {
+            return ResponseCode.INCORRECT_SESSION;
         }
-//        // No user found
-//        catch (EmptyResultDataAccessException ex) {
-//            return ResponseCode.INCORRECT_SESSION;
-//
-//        }
-//        // error db
-//        catch (DataAccessException ex) {
-//            return ResponseCode.DATABASE_ERROR;
-//        }
+        // error db
+        catch (DataAccessException ex) {
+            return ResponseCode.DATABASE_ERROR;
+        }
         return ResponseCode.OK;
     }
 
@@ -193,17 +177,14 @@ public class UserManager {
         try {
             userDAO.deleteUserByName(userName);
         }
-        catch(Exception e){
-
+        // No user found
+        catch (EmptyResultDataAccessException ex) {
+            return ResponseCode.INCORRECT_SESSION;
         }
-//        // No user found
-//        catch (EmptyResultDataAccessException ex) {
-//            return ResponseCode.INCORRECT_SESSION;
-//        }
-//        // error db
-//        catch (DataAccessException ex) {
-//            return ResponseCode.DATABASE_ERROR;
-//        }
+        // error db
+        catch (DataAccessException ex) {
+            return ResponseCode.DATABASE_ERROR;
+        }
         return ResponseCode.OK;
     }
 
@@ -212,18 +193,15 @@ public class UserManager {
         try {
             user = userDAO.getUserById(userId);
         }
-        catch(Exception e){
-
-        }
+//        catch(Excep
 //        // No user found
-//        catch (EmptyResultDataAccessException ex) {
-//            return ResponseCode.INCORRECT_SESSION;
-//
-//        }
-//        // error db
-//        catch (DataAccessException ex) {
-//            return ResponseCode.DATABASE_ERROR;
-//        }
+        catch (EmptyResultDataAccessException ex) {
+            return ResponseCode.INCORRECT_SESSION;
+        }
+        // error db
+        catch (DataAccessException ex) {
+            return ResponseCode.DATABASE_ERROR;
+        }
         return ResponseCode.OK;
     }
 }
