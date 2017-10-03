@@ -16,18 +16,19 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
 
+@SuppressWarnings("unused")
 @Service
 public class UserManager {
-    @NotNull private UserDAO userDAO;
+    @NotNull private final UserDAO userDAO;
 
     public enum ResponseCode {
-        OK,
+        @SuppressWarnings("EnumeratedConstantNamingConvention") OK,
         LOGIN_IS_BUSY,
         INCORRECT_LOGIN,
         INCORRECT_PASSWORD,
         INCORRECT_SESSION,
         DATABASE_ERROR
-    };
+    }
 
     @Autowired
     public UserManager(final JdbcTemplate jdbcTemplate){
@@ -41,18 +42,18 @@ public class UserManager {
         return new BCryptPasswordEncoder();
     }
 
-    private final String  makePasswordHash(@NotNull final String password) {
+    private String  makePasswordHash(@NotNull final String password) {
         return passwordEncoder().encode(password);
     }
 
-    private final boolean checkPassword(@NotNull final String password, @NotNull final String passwordHash){
+    private boolean checkPassword(@NotNull final String password, @NotNull final String passwordHash){
         return passwordEncoder().matches(password, passwordHash);
     }
 
     public boolean checkPasswordByUserName(@NotNull final String password, @NotNull final String userLogin)
     {
         try {
-            UserModel savedUser = userDAO.getUserByName(userLogin);
+            final UserModel savedUser = userDAO.getUserByName(userLogin);
 
             if (checkPassword(password, savedUser.getUserPasswordHash()))
                 return true;
@@ -68,7 +69,7 @@ public class UserManager {
 
         // Check user storaged in database
         try {
-            UserModel savedUser = userDAO.getUserByName(signInUserData.getUserName());
+            final UserModel savedUser = userDAO.getUserByName(signInUserData.getUserName());
 
             // wrong password
             if (!checkPassword(signInUserData.getUserPassword(), savedUser.getUserPasswordHash()))
@@ -88,7 +89,7 @@ public class UserManager {
     public ResponseCode signUpUser(@NotNull final SignUpModel signUpUserData) {
 
         // Creating UserModel to stoarage
-        UserModel newUser = new UserModel(signUpUserData);
+        final UserModel newUser = new UserModel(signUpUserData);
         newUser.setUserPasswordHash(makePasswordHash(signUpUserData.getUserPassword()));
 
         // trying to save user
@@ -150,7 +151,7 @@ public class UserManager {
     public ResponseCode getUserByName(@NotNull final String userName, UserModel user){
         // trying to get storaged user
         try {
-            UserModel tempUser = userDAO.getUserByName(userName);
+            final UserModel tempUser = userDAO.getUserByName(userName);
             user.setUserName(tempUser.getUserName());
             user.setUserEmail(tempUser.getUserEmail());
             user.setUserHighScore(tempUser.getUserHighScore());
@@ -185,7 +186,7 @@ public class UserManager {
     public ResponseCode getUserById(@NotNull final Integer userId, UserModel user){
         // trying to get storaged user
         try {
-            UserModel tempUser = userDAO.getUserById(userId);
+            final UserModel tempUser = userDAO.getUserById(userId);
             user.setUserName(tempUser.getUserName());
             user.setUserEmail(tempUser.getUserEmail());
             user.setUserHighScore(tempUser.getUserHighScore());

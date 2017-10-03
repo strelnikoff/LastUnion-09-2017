@@ -30,7 +30,7 @@ public class SignInController {
     @RequestMapping(path="/api/user/signin", method = RequestMethod.POST,
                     produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE
                     )
-    public ResponseEntity<ResponseCode> getMessage(@RequestBody SignInView signInView, HttpSession httpSession) {
+    public ResponseEntity<ResponseCode> signIn(@RequestBody SignInView signInView, HttpSession httpSession) {
 
         // Incorrect authenticatiion data
         if (!signInView.isValid()){
@@ -41,6 +41,7 @@ public class SignInController {
         final SignInModel signInUser = new SignInModel(signInView.getUserName(), signInView.getUserPassword());
 
         final UserManager.ResponseCode responseCode = userManager.signInUser(signInUser);
+        //noinspection EnumSwitchStatementWhichMissesCases
         switch (responseCode) {
 
             case INCORRECT_LOGIN:

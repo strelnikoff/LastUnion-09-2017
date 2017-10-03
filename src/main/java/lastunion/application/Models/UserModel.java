@@ -11,41 +11,25 @@ public final class UserModel {
 
     public UserModel(Integer userId, String userName, String userEmail,
                      String userPasswordHash, Integer userHighScore){
-        setUserId(userId);
-        setUserName(userName);
-        setUserEmail(userEmail);
-        setUserPasswordHash(userPasswordHash);
-        setUserHighScore(userHighScore);
+        this.userId = userId;
+        this.userName = userName;
+        this.userEmail = userEmail;
+        this.userPasswordHash = userPasswordHash;
+        this.userHighScore = userHighScore;
     }
 
     public UserModel(UserModel other){
-        setUserId(other.userId);
-        setUserName(other.userName);
-        setUserEmail(other.userEmail);
-        setUserPasswordHash(other.userPasswordHash);
-        setUserHighScore(other.userHighScore);
-    }
-
-
-    public UserModel(Integer userId, String userName, String userEmail,
-                     String userPasswordHash){
-        setUserId(userId);
-        setUserName(userName);
-        setUserEmail(userEmail);
-        setUserPasswordHash(userPasswordHash);
-    }
-
-    public UserModel(String userName, String userEmail,
-                     String userPassword){
-        setUserName(userName);
-        setUserEmail(userEmail);
-        setUserPasswordHash(userPassword);
+        this.userId = other.userId;
+        this.userName = other.userName;
+        this.userEmail = other.userEmail;
+        this.userPasswordHash = other.userPasswordHash;
+        this.userHighScore = other.userHighScore;
     }
 
     public UserModel(SignUpModel signUpModel) {
-        setUserName(signUpModel.getUserName());
-        setUserEmail(signUpModel.getUserEmail());
-        setUserPasswordHash(signUpModel.getUserPassword());
+        this.userName = signUpModel.getUserName();
+        this.userEmail = signUpModel.getUserEmail();
+        this.userPasswordHash = signUpModel.getUserPassword();
     }
 
     /*
@@ -68,6 +52,7 @@ public final class UserModel {
         return userHighScore;
     }
 
+    @SuppressWarnings("unused")
     public void setUserId(Integer userId) {
         this.userId = userId;
     }

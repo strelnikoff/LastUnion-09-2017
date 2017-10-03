@@ -32,6 +32,7 @@ public class UserController {
         this.userManager = userManager;
     }
 
+    @SuppressWarnings("EnumSwitchStatementWhichMissesCases")
     @RequestMapping(path="/api/user/data", method= RequestMethod.GET,
                     produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseCode<UserView>> getUserData(HttpSession httpSession){
@@ -74,16 +75,16 @@ public class UserController {
     @RequestMapping(path="/api/user/logout", method= RequestMethod.POST,
                     produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseCode> logout(HttpSession httpSession){
-        String userLogin = (String)httpSession.getAttribute("userLogin");
+        final String userLogin = (String)httpSession.getAttribute("userLogin");
 
         if (userLogin == null){
-            return new ResponseEntity<ResponseCode>(new ResponseCode<>(false,
+            return new ResponseEntity<>(new ResponseCode<>(false,
                     messageSource.getMessage("msgs.not_found", null, Locale.ENGLISH)),
                     HttpStatus.NOT_FOUND);
         }
 
         httpSession.invalidate();
-        return new ResponseEntity<ResponseCode>(new ResponseCode<>(true,
+        return new ResponseEntity<>(new ResponseCode<>(true,
                 messageSource.getMessage("msgs.ok", null, Locale.ENGLISH)),
                 HttpStatus.OK);
     }
@@ -94,35 +95,36 @@ public class UserController {
     public ResponseEntity<ResponseCode> changeEmail(@RequestBody EmailView emailView,
                                                     HttpSession httpSession ){
         // Check is there userLogin
-        String userLogin = (String)httpSession.getAttribute("userLogin");
+        final String userLogin = (String)httpSession.getAttribute("userLogin");
         if (userLogin == null){
-            return new ResponseEntity<ResponseCode>(new ResponseCode<>(false,
+            return new ResponseEntity<>(new ResponseCode<>(false,
                     messageSource.getMessage("msgs.not_found", null, Locale.ENGLISH)),
                     HttpStatus.NOT_FOUND);
         }
 
         // check form for valid
         if (!emailView.isValid()) {
-            return new ResponseEntity<ResponseCode>(new ResponseCode<>(false,
+            return new ResponseEntity<>(new ResponseCode<>(false,
                     messageSource.getMessage("msgs.email_error", null, Locale.ENGLISH)),
                     HttpStatus.BAD_REQUEST);
         }
 
-        UserManager.ResponseCode responseCode = userManager.changeUserEmail(emailView.getNewEmail(), userLogin);
+        final UserManager.ResponseCode responseCode = userManager.changeUserEmail(emailView.getNewEmail(), userLogin);
 
+        //noinspection EnumSwitchStatementWhichMissesCases
         switch (responseCode) {
             case INCORRECT_SESSION: {
-                return new ResponseEntity<ResponseCode>(new ResponseCode<>(false,
-                    messageSource.getMessage("msgs.not_found", null, Locale.ENGLISH)),
-                    HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>(new ResponseCode<>(false,
+                        messageSource.getMessage("msgs.not_found", null, Locale.ENGLISH)),
+                        HttpStatus.NOT_FOUND);
             }
             case OK: {
-                return new ResponseEntity<ResponseCode>(new ResponseCode<>(true,
+                return new ResponseEntity<>(new ResponseCode<>(true,
                         messageSource.getMessage("msgs.ok", null, Locale.ENGLISH)),
                         HttpStatus.OK);
             }
             default: {
-                return new ResponseEntity<ResponseCode>(new ResponseCode<>(false,
+                return new ResponseEntity<>(new ResponseCode<>(false,
                         messageSource.getMessage("msgs.interanl_server_error", null, Locale.ENGLISH)),
                         HttpStatus.INTERNAL_SERVER_ERROR);
             }
@@ -135,9 +137,9 @@ public class UserController {
     public ResponseEntity<ResponseCode> changePassword(@RequestBody PasswordView passwordView,
                                                        HttpSession httpSession ){
         // Check is there userLogin
-        String userLogin = (String)httpSession.getAttribute("userLogin");
+        final String userLogin = (String)httpSession.getAttribute("userLogin");
         if (userLogin == null){
-            return new ResponseEntity<ResponseCode>(new ResponseCode<>(false,
+            return new ResponseEntity<>(new ResponseCode<>(false,
                     messageSource.getMessage("msgs.not_found", null, Locale.ENGLISH)),
                     HttpStatus.NOT_FOUND);
         }
@@ -145,14 +147,14 @@ public class UserController {
 
 
         if (!passwordView.isValid()) {
-            return new ResponseEntity<ResponseCode>(new ResponseCode<>(false,
+            return new ResponseEntity<>(new ResponseCode<>(false,
                     messageSource.getMessage("msgs.bad_request", null, Locale.ENGLISH)),
                     HttpStatus.BAD_REQUEST);
         }
 
 
         if(!userManager.checkPasswordByUserName(passwordView.getOldPassword(), userLogin)) {
-            return new ResponseEntity<ResponseCode>(new ResponseCode(false,
+            return new ResponseEntity<>(new ResponseCode(false,
                     messageSource.getMessage("msgs.forbidden", null, Locale.ENGLISH)),
                     HttpStatus.FORBIDDEN);
         }
@@ -160,14 +162,15 @@ public class UserController {
 
         final UserManager.ResponseCode responseCode = userManager.changeUserPassword(passwordView.getNewPassword(), userLogin);
 
+        //noinspection EnumSwitchStatementWhichMissesCases
         switch(responseCode){
             case OK: {
-                return new ResponseEntity<ResponseCode>(new ResponseCode<>(true,
+                return new ResponseEntity<>(new ResponseCode<>(true,
                         messageSource.getMessage("msgs.ok", null, Locale.ENGLISH)),
                         HttpStatus.OK);
             }
             default: {
-                return new ResponseEntity<ResponseCode>(new ResponseCode<>(false,
+                return new ResponseEntity<>(new ResponseCode<>(false,
                         messageSource.getMessage("msgs.interanl_server_error", null, Locale.ENGLISH)),
                         HttpStatus.INTERNAL_SERVER_ERROR);
             }
@@ -177,25 +180,26 @@ public class UserController {
     @RequestMapping(path="/api/user/delete", method= RequestMethod.DELETE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseCode> deleteUser(HttpSession httpSession ){
-        String userLogin = (String)httpSession.getAttribute("userLogin");
+        final String userLogin = (String)httpSession.getAttribute("userLogin");
 
         if (userLogin == null){
-            return new ResponseEntity<ResponseCode>(new ResponseCode<>(false,
+            return new ResponseEntity<>(new ResponseCode<>(false,
                     messageSource.getMessage("msgs.not_found", null, Locale.ENGLISH)),
                     HttpStatus.NOT_FOUND);
         }
 
         final UserManager.ResponseCode responseCode = userManager.deleteUserByName(userLogin);
 
+        //noinspection EnumSwitchStatementWhichMissesCases
         switch (responseCode) {
             case OK:{
                 httpSession.invalidate();
-                return new ResponseEntity<ResponseCode>(new ResponseCode(true,
+                return new ResponseEntity<>(new ResponseCode(true,
                         messageSource.getMessage("msgs.ok", null, Locale.ENGLISH)),
                         HttpStatus.OK);
             }
             default:{
-                return new ResponseEntity<ResponseCode>(new ResponseCode(false,
+                return new ResponseEntity<>(new ResponseCode(false,
                         messageSource.getMessage("msgs.internal_server_error", null, Locale.ENGLISH)),
                         HttpStatus.INTERNAL_SERVER_ERROR);
             }

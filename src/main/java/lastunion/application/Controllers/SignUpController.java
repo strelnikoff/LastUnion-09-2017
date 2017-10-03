@@ -32,7 +32,7 @@ public class SignUpController {
 
     @RequestMapping(path="/api/user/signup", method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResponseCode> getMessage(@RequestBody SignUpView signUpView, HttpSession httpSession) {
+    public ResponseEntity<ResponseCode> signUp(@RequestBody SignUpView signUpView, HttpSession httpSession) {
 
         // Incorrect reg data
         if (!signUpView.isValid()) {
@@ -45,6 +45,7 @@ public class SignUpController {
                                                        signUpView.getUserEmail());
 
         final UserManager.ResponseCode responseCode = userManager.signUpUser(signUpUser);
+        //noinspection EnumSwitchStatementWhichMissesCases
         switch (responseCode) {
             case OK: {
                 httpSession.setAttribute("userLogin", signUpView.getUserName());

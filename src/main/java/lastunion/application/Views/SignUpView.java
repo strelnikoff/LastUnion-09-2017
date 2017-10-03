@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
+@SuppressWarnings("ALL")
 public class SignUpView implements AbstractView {
     private final String userName;
     private final String userPassword;
@@ -19,19 +20,22 @@ public class SignUpView implements AbstractView {
         this.userEmail = userEmail;
     }
 
+
     public final String getUserName(){
         return userName;
     }
     public final String getUserPassword(){ return userPassword; }
     public final String getUserEmail() {return userEmail; }
+    @Override
     public final  boolean isFilled(){
         return userEmail != null && userPassword != null && userName !=null;
     }
 
+    @Override
     public final boolean isValid() {
         if (!isFilled()) return false;
         try {
-            InternetAddress emailAddr = new InternetAddress(userEmail);
+            final InternetAddress emailAddr = new InternetAddress(userEmail);
             emailAddr.validate();
         } catch (AddressException ex) {
             return false;

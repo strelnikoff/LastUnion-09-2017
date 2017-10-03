@@ -37,6 +37,7 @@ public class UserDAO {
         );
     }
 
+    @SuppressWarnings("InstanceMethodNamingConvention")
     private void AppendStringField(StringBuilder builder, String fieldName, String value){
         builder.append(fieldName);
         builder.append('=');
@@ -46,26 +47,16 @@ public class UserDAO {
         builder.append(',');
     }
 
-    private void AppendIntegerField(StringBuilder builder, String fieldName, Integer value){
+    @SuppressWarnings("InstanceMethodNamingConvention")
+    private void AppendIntegerField(StringBuilder builder, @SuppressWarnings("SameParameterValue") String fieldName,
+                                    Integer value){
         builder.append(fieldName);
         builder.append('=');
         builder.append(value);
     }
 
     public void modifyUser(UserModel user, UserModel changedUser) {
-        StringBuilder builder = new StringBuilder ("UPDATE users set ");// login = ");
-//        builder.append('\'');
-//        builder.append(changedUser.getUserName());
-//        builder.append('\'');
-//        builder.append(" email = ");
-//        builder.append(changedUser.getUserEmail());
-//        builder.append(',');
-//        builder.append("password = ");
-//        builder.append(changedUser.getUserPasswordHash());
-//        builder.append(',');
-//        builder.append(" score = ");
-//        builder.append(changedUser.getUserHighScore());
-//        builder.append(')');
+        final StringBuilder builder = new StringBuilder ("UPDATE users set ");// login = ");
         AppendStringField(builder, "login", changedUser.getUserName());
         AppendStringField(builder, "email", changedUser.getUserEmail());
         AppendStringField(builder, "password", changedUser.getUserPasswordHash());
@@ -76,6 +67,7 @@ public class UserDAO {
         executeQuery(builder.toString());
     }
 
+    @SuppressWarnings("StringBufferReplaceableByString")
     public void saveUser(UserModel user)  {
         final StringBuilder builder = new StringBuilder("INSERT INTO users (login, email, password) VALUES(");
         builder.append('\'');
@@ -94,6 +86,7 @@ public class UserDAO {
         executeQuery(builder.toString());
     }
 
+    @SuppressWarnings("StringBufferReplaceableByString")
     public void deleteUserByName(final String userName){
         final StringBuilder builder = new StringBuilder("DELETE FROM users WHERE login = ");
         builder.append('\'');
