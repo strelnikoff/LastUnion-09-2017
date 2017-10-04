@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
 
-@SuppressWarnings("unused")
 @Service
 public class UserManager {
     @NotNull private final UserDAO userDAO;
@@ -183,6 +182,7 @@ public class UserManager {
         return ResponseCode.OK;
     }
 
+    @SuppressWarnings("unused")
     public ResponseCode getUserById(@NotNull final Integer userId, UserModel user){
         // trying to get storaged user
         try {
