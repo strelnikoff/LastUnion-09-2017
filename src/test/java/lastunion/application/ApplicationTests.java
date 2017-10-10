@@ -1,16 +1,14 @@
 package lastunion.application;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Import;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootApplication
+@Import(Application.class)
 public class ApplicationTests {
 
-	@Test
-	public void contextLoads() {
-	}
-
+    public static void main(String[] args) throws Exception {
+        SpringApplication.run(ApplicationTests.class, args);
+    }
 }

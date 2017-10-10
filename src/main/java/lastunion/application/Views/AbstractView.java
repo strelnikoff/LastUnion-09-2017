@@ -1,8 +1,7 @@
 package lastunion.application.Views;
 
+@SuppressWarnings("ALL")
 public interface AbstractView {
-    @SuppressWarnings("unused")
     boolean isFilled();
-    @SuppressWarnings("unused")
     boolean isValid();
 }
