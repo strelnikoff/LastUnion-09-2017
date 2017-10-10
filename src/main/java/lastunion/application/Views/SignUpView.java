@@ -6,12 +6,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
+@SuppressWarnings("ALL")
 public class SignUpView implements AbstractView {
     private final String userName;
     private final String userPassword;
     private final String userEmail;
 
-    @SuppressWarnings("unused")
     @JsonCreator
     SignUpView(@JsonProperty("userName") String userName, @JsonProperty("userPassword") String userPassword,
                @JsonProperty("userEmail") String userEmail){
