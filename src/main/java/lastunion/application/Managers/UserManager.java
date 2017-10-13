@@ -27,6 +27,7 @@ public class UserManager {
         INCORRECT_LOGIN,
         INCORRECT_PASSWORD,
         INCORRECT_SESSION,
+        INCORRECT_SIGNUP_DATA,
         DATABASE_ERROR
     }
 

@@ -36,10 +36,13 @@ public class SignUpController {
 
         // Incorrect reg data
         if (!signUpView.isValid()) {
+            System.out.print("fu");
             return new ResponseEntity<>(new ResponseCode(false,
                     messageSource.getMessage("msgs.bad_request", null, Locale.ENGLISH)),
                     HttpStatus.BAD_REQUEST);
         }
+        System.out.print("fu");
+
 
         final SignUpModel signUpUser = new SignUpModel(signUpView.getUserName(), signUpView.getUserPassword(),
                                                        signUpView.getUserEmail());
@@ -48,6 +51,7 @@ public class SignUpController {
         //noinspection EnumSwitchStatementWhichMissesCases
         switch (responseCode) {
             case OK: {
+
                 httpSession.setAttribute("userLogin", signUpView.getUserName());
                 return new ResponseEntity<>(new ResponseCode(true,
                         messageSource.getMessage("msgs.created", null, Locale.ENGLISH)),
@@ -55,13 +59,16 @@ public class SignUpController {
             }
 
             case LOGIN_IS_BUSY:{
+                System.out.print("fu");
+
                 return new ResponseEntity<>(new ResponseCode(false,
                         messageSource.getMessage("msgs.conflict", null, Locale.ENGLISH)),
                         HttpStatus.CONFLICT);
             }
 
-
             default: {
+
+                System.out.print("fu");
                 return new ResponseEntity<>(new ResponseCode(false,
                         messageSource.getMessage("msgs.internal_server_error", null, Locale.ENGLISH)),
                         HttpStatus.INTERNAL_SERVER_ERROR);

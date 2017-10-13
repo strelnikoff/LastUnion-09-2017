@@ -7,23 +7,23 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("MissortedModifiers")
 public final class ResponseCode<T> {
     private final boolean result;
-    private final String errorMessage;
+    private final String responseMessage;
     private final T data;
 
     @JsonCreator
     public ResponseCode(@JsonProperty("result") boolean result,
-                        @JsonProperty("errorMsg") String errorMessage,
+                        @JsonProperty("responseMessage") String responseMessage,
                         @JsonProperty("data") T data) {
         this.result = result;
-        this.errorMessage = errorMessage;
+        this.responseMessage = responseMessage;
         this.data = data;
     }
 
     @JsonCreator
     public ResponseCode(@JsonProperty("result") boolean result,
-                        @JsonProperty("errorMsg") String errorMsg) {
+                        @JsonProperty("responseMessage") String responseMessage) {
         this.result = result;
-        this.errorMessage = errorMsg;
+        this.responseMessage = responseMessage;
         this.data = null;
     }
 
@@ -31,7 +31,7 @@ public final class ResponseCode<T> {
     public boolean getResult() { return result; }
 
     @SuppressWarnings("unused")
-    public String getErrorMessage() { return errorMessage;  }
+    public String getResponseMessage() { return responseMessage;  }
 
     @Nullable
     @SuppressWarnings("unused")

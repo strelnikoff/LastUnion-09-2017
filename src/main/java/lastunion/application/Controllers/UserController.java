@@ -36,7 +36,7 @@ public class UserController {
     @RequestMapping(path="/api/user/data", method= RequestMethod.GET,
                     produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseCode<UserView>> getUserData(HttpSession httpSession){
-        final String userLogin = (String)httpSession.getAttribute("userLogin");
+        final String userLogin = (String)httpSession.getAttribute("userName");
         if (userLogin == null){
             return new ResponseEntity<>(new ResponseCode<>(false,
                     messageSource.getMessage("msgs.not_found", null, Locale.ENGLISH)),
@@ -75,7 +75,7 @@ public class UserController {
     @RequestMapping(path="/api/user/logout", method= RequestMethod.POST,
                     produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseCode> logout(HttpSession httpSession){
-        final String userLogin = (String)httpSession.getAttribute("userLogin");
+        final String userLogin = (String)httpSession.getAttribute("userName");
 
         if (userLogin == null){
             return new ResponseEntity<>(new ResponseCode<>(false,
@@ -95,7 +95,7 @@ public class UserController {
     public ResponseEntity<ResponseCode> changeEmail(@RequestBody EmailView emailView,
                                                     HttpSession httpSession ){
         // Check is there userLogin
-        final String userLogin = (String)httpSession.getAttribute("userLogin");
+        final String userLogin = (String)httpSession.getAttribute("userName");
         if (userLogin == null){
             return new ResponseEntity<>(new ResponseCode<>(false,
                     messageSource.getMessage("msgs.not_found", null, Locale.ENGLISH)),
@@ -137,7 +137,7 @@ public class UserController {
     public ResponseEntity<ResponseCode> changePassword(@RequestBody PasswordView passwordView,
                                                        HttpSession httpSession ){
         // Check is there userLogin
-        final String userLogin = (String)httpSession.getAttribute("userLogin");
+        final String userLogin = (String)httpSession.getAttribute("userName");
         if (userLogin == null){
             return new ResponseEntity<>(new ResponseCode<>(false,
                     messageSource.getMessage("msgs.not_found", null, Locale.ENGLISH)),
@@ -180,7 +180,7 @@ public class UserController {
     @RequestMapping(path="/api/user/delete", method= RequestMethod.DELETE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseCode> deleteUser(HttpSession httpSession ){
-        final String userLogin = (String)httpSession.getAttribute("userLogin");
+        final String userLogin = (String)httpSession.getAttribute("userName");
 
         if (userLogin == null){
             return new ResponseEntity<>(new ResponseCode<>(false,
