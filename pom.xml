@@ -136,10 +136,10 @@
 					<version>8.2</version>
 				</dependency>
 			</dependencies>
-			<configuration>
+<!-- 			<configuration>
 				<configLocation>park_checks.xml</configLocation>
 				<consoleOutput>true</consoleOutput>
-			</configuration>
+			</configuration> -->
 			<executions>
 				<execution>
 					<phase>package</phase>
