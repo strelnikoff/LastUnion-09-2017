@@ -112,17 +112,17 @@
 		</dependency>
 	</dependencies>
 
-	<!--<build>-->
-		<!--<plugins>-->
-			<!--<plugin>-->
-				<!--<groupId>org.springframework.boot</groupId>-->
-				<!--<artifactId>spring-boot-maven-plugin</artifactId>-->
-			<!--</plugin>-->
-		<!--</plugins>-->
-	<!--</build>-->
-<!--</project>-->
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+</project>
 
-
+<!-- 
 	<build>
 	<plugins>
 		<plugin>
@@ -136,10 +136,10 @@
 					<version>8.2</version>
 				</dependency>
 			</dependencies>
-<!-- 			<configuration>
+			<configuration>
 				<configLocation>park_checks.xml</configLocation>
 				<consoleOutput>true</consoleOutput>
-			</configuration> -->
+			</configuration>
 			<executions>
 				<execution>
 					<phase>package</phase>
@@ -162,4 +162,4 @@
 		</plugin>
 	</plugins>
 	</build>
-</project>
+</project> -->
